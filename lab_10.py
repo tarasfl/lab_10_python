@@ -80,9 +80,16 @@ class Node:
         elif parrent is None:
             if element.right is not None:
                 new_element = element.right.find_most_left()
-                new_parent = self.find_parent(new_element.key)  # node in which change reference
+                new_parrent = self.find_parent(new_element.key)  # node in which change reference
 
                 element.key = new_element.key
+                if new_element.right is not None:
+                    if new_parrent is not None:
+                        new_parrent.left = new_element.right
+                new_element.key = None
+                new_element.left = None
+                new_element.right = None
+                del new_element
 
     def print_all_elements(self):
         print(self.key)
@@ -143,15 +150,21 @@ class Node:
         if self.right:
             self.right.traversal()
 
+    def bottom_to_top_traversal(self):
+        if self.left:
+            self.left.traversal()
+        if self.right:
+            self.right.traversal()
+        print(self.key)
+
     def delete_all_elements_by_type(self, type_of_transistor, root):
-        if self.type_of_transistor == type_of_transistor:
-            print("element to delete", self.key)
-            root.delete_element(self.key)
         if self.left:
             self.left.delete_all_elements_by_type(type_of_transistor, root)
-
         if self.right:
             self.right.delete_all_elements_by_type(type_of_transistor, root)
+
+        if self.type_of_transistor == type_of_transistor:
+            root.delete_element(self.key)
 
     def print_elements_by_params(self, i_k_max, u_k_max):
         if self.i_k_max == i_k_max and self.u_k_max == u_k_max:
@@ -181,6 +194,8 @@ if __name__ == '__main__':
     el8.i_k_max = 10
     el9.u_k_max = 10
     el8.u_k_max = 10
+    el9.type_of_transistor = "p-n-p"
+    el8.type_of_transistor = "p-n-p"
     root.add_element_by_key(7)
     root.add_element_by_key(40)
     root.add_element_by_key(30)
@@ -189,6 +204,5 @@ if __name__ == '__main__':
     root.add_element_by_key(33)
     root.add_element_by_key(31)
     root.add_element_by_key(32)
-    # root.destroy(root)
-    root.delete_element(20)
-    root.print_all_elements()
+    root.delete_all_elements_by_type("p-n-p", root)
+    root.traversal()
